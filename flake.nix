@@ -9,7 +9,7 @@
     in {
       devShell = pkgs.mkShell {
         nativeBuildInputs = [ pkgs.bashInteractive ];
-        buildInputs = [ go ];
+        buildInputs = [ pkgs.go ];
       };
     });
 }
