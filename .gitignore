@@ -1,0 +1,13 @@
+# Nix stuff
+.envrc
+.direnv/
+
+# Editors
+**/.idea
+**/.iml
+
+.vscode/
+/.vscode/*
+
+**/*.vim
+**/*.swp
