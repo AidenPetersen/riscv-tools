@@ -11,3 +11,8 @@
 
 **/*.vim
 **/*.swp
+
+
+# Added by cargo
+
+/target
