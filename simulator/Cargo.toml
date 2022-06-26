@@ -1,8 +1,10 @@
 [package]
-name = "simulator"
+name = "riscv-simulator"
 version = "0.1.0"
 edition = "2021"
-
+authors = ["Aiden Petersen <aidenpetersen@protonmail.com>"]
+description = "A simple command line simulator for RISC-V"
+readme = "./README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

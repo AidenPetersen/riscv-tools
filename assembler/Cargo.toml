@@ -1,8 +1,14 @@
 [package]
-name = "assembler"
+name = "riscv-assembler"
 version = "0.1.0"
 edition = "2021"
+description = "A risc-v assembler for my CPU"
+readme = "./README.md"
+authors = ["Aiden Petersen <aidenpetersen@protonmail.com>"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+clap = { version = "3.2.6", features = ["derive"] }
+
