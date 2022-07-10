@@ -1,7 +1,9 @@
 use super::types::{Imm, Reg};
-use super::Translate;
+use super::instruction::Instruction;
+use std::str::FromStr;
 
-enum ITypeMne {
+#[derive(PartialEq, Debug)] 
+pub enum ITypeMne {
     JALR,
     LB,
     LH,
@@ -19,14 +21,41 @@ enum ITypeMne {
     SRAI,
 }
 
-pub struct IType {
-    mne: ITypeMne,
-    rd: Reg,
-    rs1: Reg,
-    imm: Imm,
+
+impl FromStr for ITypeMne {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input.to_lowercase().as_ref() {
+            "jalr" => Ok(ITypeMne::JALR),
+            "lb" => Ok(ITypeMne::LB),
+            "lh" => Ok(ITypeMne::LH),
+            "lw" => Ok(ITypeMne::LW),
+            "lbu" => Ok(ITypeMne::LBU),
+            "lhu" => Ok(ITypeMne::LHU),
+            "addi" => Ok(ITypeMne::ADDI),
+            "slti" => Ok(ITypeMne::SLTI),
+            "sltiu" => Ok(ITypeMne::SLTIU),
+            "xori" => Ok(ITypeMne::XORI),
+            "ori" => Ok(ITypeMne::ORI),
+            "andi" => Ok(ITypeMne::ANDI),
+            "slli" => Ok(ITypeMne::SLLI),
+            "srli" => Ok(ITypeMne::SRLI),
+            "srai" => Ok(ITypeMne::SRAI),
+            _ => Err(()),
+        }
+    }
 }
 
-impl Translate for IType {
+#[derive(PartialEq, Debug)] 
+pub struct IType {
+    pub mne: ITypeMne,
+    pub rd: Reg,
+    pub rs1: Reg,
+    pub imm: Imm,
+}
+
+impl Instruction for IType {
     fn translate(&self) -> Vec<u8> {
         let opcode: u32 = match self.mne {
             // Jumps

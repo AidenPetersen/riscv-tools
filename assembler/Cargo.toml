@@ -11,4 +11,4 @@ authors = ["Aiden Petersen <aidenpetersen@protonmail.com>"]
 
 [dependencies]
 clap = { version = "3.2.6", features = ["derive"] }
-
+nom = "7"

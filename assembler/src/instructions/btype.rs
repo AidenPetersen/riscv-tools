@@ -1,7 +1,9 @@
 use super::types::{Imm, Reg};
-use super::Translate;
+use super::instruction::Instruction;
+use std::str::FromStr;
 
-enum BTypeMne {
+#[derive(Debug, PartialEq)]
+pub enum BTypeMne {
     BEQ,
     BNE,
     BLT,
@@ -10,14 +12,33 @@ enum BTypeMne {
     BGEU,
 }
 
-pub struct BType {
-    mne: BTypeMne,
-    rs1: Reg,
-    rs2: Reg,
-    imm: Imm,
+impl FromStr for BTypeMne {
+
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input.to_lowercase().as_ref() {
+            "beq" => Ok(BTypeMne::BEQ),
+            "bne" => Ok(BTypeMne::BNE),
+            "blt" => Ok(BTypeMne::BLT),
+            "bge" => Ok(BTypeMne::BGE),
+            "bltu" => Ok(BTypeMne::BLTU),
+            "bgeu" => Ok(BTypeMne::BGEU),
+            _ => Err(()),
+        }
+    }
 }
 
-impl Translate for BType {
+#[derive(Debug, PartialEq)]
+pub struct BType {
+    pub mne: BTypeMne,
+    pub rs1: Reg,
+    pub rs2: Reg,
+    pub imm: Imm,
+}
+
+
+impl Instruction for BType {
     fn translate(&self) -> Vec<u8> {
         let funct3 = match self.mne {
             BTypeMne::BEQ => 0b000,
@@ -32,7 +53,6 @@ impl Translate for BType {
         let imm10_5 = (self.imm >> 5) & 0x3F;
         let imm4_1 = (self.imm >> 1) & 0xF;
         let imm11 = (self.imm >> 11) & 0x1;
-        println!("{:b}\n{:b}\n{:b}\n{:b}", imm12, imm10_5, imm4_1, imm11);
         let result: u32 = 0
             | (imm12 << 31)
             | (imm10_5 << 25)
@@ -42,7 +62,6 @@ impl Translate for BType {
             | (imm4_1 << 8)
             | (imm11 << 7)
             | opcode;
-        println!("{:b}", result);
         result.to_be_bytes().to_vec()
     }
 }

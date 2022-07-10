@@ -11,7 +11,7 @@ struct Cli {
     #[clap(value_parser=file_exists, help="Input assembly file" )]
     input_file: String,
     
-    #[clap(value_parser, help="Output ELF binary executable")]
+    #[clap(value_parser, help="Output binary executable")]
     output_file: String,
 }
 

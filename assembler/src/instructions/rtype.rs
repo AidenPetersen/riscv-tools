@@ -1,7 +1,9 @@
+use super::instruction::Instruction;
 use super::types::Reg;
-use super::Translate;
+use std::str::FromStr;
 
-enum RTypeMne {
+#[derive(PartialEq, Debug)] 
+pub enum RTypeMne {
     ADD,
     SUB,
     SLL,
@@ -14,14 +16,35 @@ enum RTypeMne {
     AND,
 }
 
-pub struct RType {
-    mne: RTypeMne,
-    rd: Reg,
-    rs1: Reg,
-    rs2: Reg,
+impl FromStr for RTypeMne {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input.to_lowercase().as_ref() {
+            "add" => Ok(RTypeMne::ADD),
+            "sub" => Ok(RTypeMne::SUB),
+            "sll" => Ok(RTypeMne::SLL),
+            "slt" => Ok(RTypeMne::SLT),
+            "sltu" => Ok(RTypeMne::SLTU),
+            "xor" => Ok(RTypeMne::XOR),
+            "srl" => Ok(RTypeMne::SRL),
+            "sra" => Ok(RTypeMne::SRA),
+            "or" => Ok(RTypeMne::OR),
+            "and" => Ok(RTypeMne::AND),
+            _ => Err(()),
+        }
+    }
 }
 
-impl Translate for RType {
+#[derive(PartialEq, Debug)] 
+pub struct RType {
+    pub mne: RTypeMne,
+    pub rd: Reg,
+    pub rs1: Reg,
+    pub rs2: Reg,
+}
+
+impl Instruction for RType {
     fn translate(&self) -> Vec<u8> {
         let opcode: u32 = 0b0110011;
         let funct7: u32 = match self.mne {

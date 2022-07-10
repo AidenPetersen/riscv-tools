@@ -1,20 +1,36 @@
+use super::instruction::Instruction;
 use super::types::{Imm, Reg};
-use super::Translate;
+use std::str::FromStr;
 
-enum STypeMne {
+#[derive(PartialEq, Debug)] 
+pub enum STypeMne {
     SB,
     SH,
     SW,
 }
 
-pub struct SType {
-    mne: STypeMne,
-    rs2: Reg,
-    imm: Imm,
-    rs1: Reg,
+impl FromStr for STypeMne {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input.to_lowercase().as_ref() {
+            "sb" => Ok(STypeMne::SB),
+            "sh" => Ok(STypeMne::SH),
+            "sw" => Ok(STypeMne::SW),
+            _ => Err(()),
+        }
+    }
 }
 
-impl Translate for SType {
+#[derive(PartialEq, Debug)] 
+pub struct SType {
+    pub mne: STypeMne,
+    pub rs2: Reg,
+    pub imm: Imm,
+    pub rs1: Reg,
+}
+
+impl Instruction for SType {
     fn translate(&self) -> Vec<u8> {
         let opcode = 0b0100011;
         let funct3 = match self.mne {

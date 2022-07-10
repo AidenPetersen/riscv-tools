@@ -1,17 +1,31 @@
+use super::instruction::Instruction;
 use super::types::{Imm, Reg};
-use super::Translate;
+use std::str::FromStr;
 
-enum JTypeMne {
+#[derive(PartialEq, Debug)] 
+pub enum JTypeMne {
     JAL,
 }
 
-pub struct JType {
-    mne: JTypeMne,
-    rd: Reg,
-    imm: Imm,
+impl FromStr for JTypeMne {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input.to_lowercase().as_ref() {
+            "jal" => Ok(JTypeMne::JAL),
+            _ => Err(()),
+        }
+    }
 }
 
-impl Translate for JType {
+#[derive(PartialEq, Debug)] 
+pub struct JType {
+    pub mne: JTypeMne,
+    pub rd: Reg,
+    pub imm: Imm,
+}
+
+impl Instruction for JType {
     fn translate(&self) -> Vec<u8> {
         let opcode: u32 = match self.mne {
             JTypeMne::JAL => 0x6F,
